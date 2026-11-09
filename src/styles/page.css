@@ -1,0 +1,35 @@
+.page {
+  min-height: 55vh;
+  padding: clamp(var(--space-8), 7vw, var(--space-10)) var(--site-gutter);
+}
+
+.page__inner {
+  width: min(100%, var(--reading-width));
+  margin-inline: auto;
+}
+
+.page__title {
+  margin: 0;
+  color: var(--page-accent, var(--color-gold));
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: 650;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.container {
+  width: min(100% - 2 * var(--site-gutter), var(--content-width));
+  margin-inline: auto;
+}
+
+.reading-width {
+  width: min(100% - 2 * var(--site-gutter), var(--reading-width));
+  margin-inline: auto;
+}
+
+@media (max-width: 37.5rem) {
+  .page {
+    min-height: 50vh;
+  }
+}
