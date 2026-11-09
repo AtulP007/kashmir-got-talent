@@ -21,7 +21,7 @@
       rgb(5 6 7 / 14%) 100%
     ),
     linear-gradient(0deg, rgb(5 6 7 / 64%) 0%, transparent 36%),
-    url('/images/kgt-hero-stage.png');
+    url('/images/kgt-hero-stage.webp');
   background-position: center, center, center 48%;
   background-size: cover;
 }
@@ -239,6 +239,40 @@
   object-fit: cover;
   filter: saturate(0.88);
   transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1), filter 350ms ease;
+}
+
+.about-collage__image::after {
+  position: absolute;
+  inset: 0.35rem;
+  background: linear-gradient(145deg, transparent 38%, rgb(211 177 107 / 18%));
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms ease;
+}
+
+.about-collage__image--active {
+  z-index: 10;
+  border-color: var(--color-gold);
+  box-shadow: 0 1.75rem 3.5rem rgb(0 0 0 / 58%);
+}
+
+.about-collage__image--active img {
+  transform: scale(1.055);
+  filter: saturate(1);
+}
+
+.about-collage__image--active::after {
+  opacity: 1;
+}
+
+.about-collage__image--active figcaption {
+  opacity: 1;
+}
+
+.about-collage__image:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
 }
 
 .about-collage__image figcaption {
@@ -472,7 +506,6 @@
   opacity: 0;
   transform: translateY(0.5rem);
   transition:
-    max-height 450ms ease,
     opacity 300ms ease,
     transform 400ms ease;
 }
@@ -569,6 +602,28 @@
   transform: translateY(0);
 }
 
+.talent-category--active {
+  z-index: 8;
+  --category-reveal-offset: -3px;
+  border-color: rgb(211 177 107 / 82%);
+  box-shadow: 0 1.75rem 3.5rem rgb(0 0 0 / 56%);
+}
+
+.talent-category--active .talent-category__image {
+  filter: saturate(1) brightness(0.94);
+  transform: scale(1.055);
+}
+
+.talent-category--active::after {
+  opacity: 0.78;
+}
+
+.talent-category--active .talent-category__details {
+  max-height: 9rem;
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .talent-category:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 4px;
@@ -656,7 +711,7 @@
         rgb(5 6 7 / 24%) 100%
       ),
       linear-gradient(0deg, rgb(5 6 7 / 70%) 0%, transparent 45%),
-      url('/images/kgt-hero-stage.png');
+      url('/images/kgt-hero-stage.webp');
   }
 
   .home-about__inner {
@@ -692,7 +747,7 @@
         rgb(5 6 7 / 82%) 39%,
         rgb(5 6 7 / 25%) 100%
       ),
-      url('/images/kgt-hero-stage.png');
+      url('/images/kgt-hero-stage.webp');
     background-position: center, 52% center;
   }
 
@@ -914,11 +969,6 @@
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
   .about-collage__image {
     will-change: auto;
-    transition: none;
-  }
-
-  .about-collage__image img {
-    transition: none;
   }
 
   .home-about__link {
@@ -931,6 +981,12 @@
 }
 
 @media (hover: none), (pointer: coarse) {
+  .about-collage__image,
+  .talent-category {
+    touch-action: pan-y;
+    will-change: auto;
+  }
+
   .talent-category__details {
     max-height: 9rem;
     opacity: 1;
@@ -943,6 +999,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .about-collage__image,
+  .about-collage__image img,
+  .about-collage__image::after {
+    transition: none;
+  }
+
   .talent-category {
     --category-reveal-offset: 0px;
     opacity: 1;
@@ -976,7 +1038,7 @@
       rgb(6 7 8 / 78%) 100%
     ),
     linear-gradient(0deg, #090a0b 0%, transparent 32%, rgb(6 7 8 / 28%) 100%),
-    url('/images/kgt-auditions-stage.png');
+    url('/images/kgt-auditions-stage.webp');
   background-position: center, center, center 48%;
   background-size: cover;
 }
@@ -1294,7 +1356,7 @@
         rgb(6 7 8 / 92%) 40%,
         #090a0b 100%
       ),
-      url('/images/kgt-auditions-stage.png');
+      url('/images/kgt-auditions-stage.webp');
     background-position: center, 60% center;
   }
 

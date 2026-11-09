@@ -37,25 +37,25 @@ const talentForms = [
   {
     name: 'Music & Sufi Traditions',
     description: 'Discover the sounds and musical heritage of Kashmir.',
-    image: '/images/about-talent-music.png',
+    image: '/images/about-talent-music.webp',
     className: 'about-gallery__item--music',
   },
   {
     name: 'Dance & Movement',
     description: 'Tradition and expression brought to life through movement.',
-    image: '/images/about-talent-dance.png',
+    image: '/images/about-talent-dance.webp',
     className: 'about-gallery__item--dance',
   },
   {
     name: 'Art & Craftsmanship',
     description: 'Creativity shaped by heritage and skilled hands.',
-    image: '/images/about-talent-art.png',
+    image: '/images/about-talent-art.webp',
     className: 'about-gallery__item--art',
   },
   {
     name: 'Poetry & Storytelling',
     description: 'Voices, emotions and stories expressed through words.',
-    image: '/images/about-talent-poetry.png',
+    image: '/images/about-talent-poetry.webp',
     className: 'about-gallery__item--poetry',
   },
 ];
@@ -75,13 +75,24 @@ const journeyStages = [
   },
 ];
 
-function AboutImage({ src, alt, className = '', loading = 'lazy' }) {
+function AboutImage({
+  src,
+  alt,
+  className = '',
+  loading = 'lazy',
+  imageWidth = 1024,
+  sizes = '100vw',
+}) {
   return (
     <img
       className={className}
       src={src}
+      srcSet={`${src.replace('.webp', '-480.webp')} 480w, ${src} ${imageWidth}w`}
+      sizes={sizes}
       alt={alt}
       loading={loading}
+      decoding="async"
+      fetchpriority={loading === 'eager' ? 'high' : 'auto'}
       onError={(event) => {
         event.currentTarget.hidden = true;
       }}
@@ -168,7 +179,7 @@ function AboutUs() {
       <section className="about-hero" aria-labelledby="about-hero-title">
         <AboutImage
           className="about-hero__image about-parallax"
-          src="/images/about-hero.png"
+          src="/images/about-hero.webp"
           alt=""
           loading="eager"
         />
@@ -221,20 +232,26 @@ function AboutUs() {
           <figure className="about-who__photo about-who__photo--main about-reveal">
             <AboutImage
               className="about-parallax"
-              src="/images/about-who-performers.png"
+              src="/images/about-who-performers.webp"
               alt="Performers sharing their creative expression"
+              imageWidth={825}
+              sizes="(max-width: 600px) 42vw, 320px"
             />
           </figure>
           <figure className="about-who__photo about-who__photo--artist about-reveal">
             <AboutImage
-              src="/images/about-who-artist.png"
+              src="/images/about-who-artist.webp"
               alt="An artist at work"
+              imageWidth={825}
+              sizes="(max-width: 600px) 30vw, 220px"
             />
           </figure>
           <figure className="about-who__photo about-who__photo--musician about-reveal">
             <AboutImage
-              src="/images/about-who-musician.png"
+              src="/images/about-who-musician.webp"
               alt="A musician performing"
+              imageWidth={825}
+              sizes="(max-width: 600px) 30vw, 220px"
             />
           </figure>
           <span className="about-who__image-caption">A place for every voice</span>
@@ -244,7 +261,7 @@ function AboutUs() {
       <section className="about-vision" aria-labelledby="about-vision-title">
         <AboutImage
           className="about-vision__backdrop"
-          src="/images/about-vision-mission.png"
+          src="/images/about-vision-mission.webp"
           alt=""
         />
         <div className="about-vision__shade" />
@@ -293,7 +310,7 @@ function AboutUs() {
           <div className="about-association__image about-reveal">
             <AboutImage
               className="about-parallax"
-              src="/images/about-army-association.png"
+              src="/images/about-army-association.webp"
               alt="Community and cultural gathering"
             />
           </div>
@@ -346,6 +363,8 @@ function AboutUs() {
                 className="about-gallery__image about-parallax"
                 src={image}
                 alt=""
+                imageWidth={825}
+                sizes="(max-width: 600px) 90vw, 28vw"
               />
               <span className="about-gallery__shade" />
               <figcaption className="about-gallery__caption">
@@ -360,7 +379,7 @@ function AboutUs() {
       <section className="about-journey" aria-labelledby="about-journey-title">
         <AboutImage
           className="about-journey__image about-parallax"
-          src="/images/about-journey.png"
+          src="/images/about-journey.webp"
           alt=""
         />
         <div className="about-journey__shade" />
@@ -398,7 +417,7 @@ function AboutUs() {
       <section className="about-cta" aria-labelledby="about-cta-title">
         <AboutImage
           className="about-cta__image about-parallax"
-          src="/images/about-cta.png"
+          src="/images/about-cta.webp"
           alt=""
         />
         <div className="about-cta__shade" />

@@ -22,8 +22,12 @@ export default function Footer() {
             <Link className="site-footer__brand" to="/" aria-label="Kashmir Got Talent home">
               <img
                 className="site-footer__logo"
-                src="/images/kgt-logo.png"
+                src="/images/kgt-logo.webp"
                 alt="Kashmir Got Talent"
+                width="400"
+                height="167"
+                loading="lazy"
+                decoding="async"
               />
             </Link>
             <div className="site-footer__attribution">

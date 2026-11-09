@@ -9,6 +9,23 @@ import {
 import { Link } from 'react-router-dom';
 import './Home.css';
 
+function handleImageKeyDown(event, activate) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    activate();
+  }
+}
+
+function responsiveImageProps(image, width, sizes) {
+  const src = `/images/${image}`;
+
+  return {
+    src,
+    srcSet: `${src.replace('.webp', '-480.webp')} 480w, ${src} ${width}w`,
+    sizes,
+  };
+}
+
 const registrationUrl =
   'https://docs.google.com/forms/d/e/1FAIpQLSeBjDQosF3JcJS3_ppiYy7RDRsSqxYpByt96PuLo2gutvbAWw/viewform?usp=dialog';
 
@@ -43,37 +60,37 @@ const homeFaqs = [
 const aboutPerformers = [
   {
     name: 'Singer',
-    image: 'kgt-about-singer.png',
+    image: 'kgt-about-singer.webp',
     className: 'about-collage__image--singer',
     depth: 0.42,
   },
   {
     name: 'Dancer',
-    image: 'kgt-about-dancer.png',
+    image: 'kgt-about-dancer.webp',
     className: 'about-collage__image--dancer',
     depth: -0.75,
   },
   {
     name: 'Musician',
-    image: 'kgt-about-musician.png',
+    image: 'kgt-about-musician.webp',
     className: 'about-collage__image--musician',
     depth: 0.95,
   },
   {
     name: 'Actor',
-    image: 'kgt-about-actor.png',
+    image: 'kgt-about-actor.webp',
     className: 'about-collage__image--actor',
     depth: -0.5,
   },
   {
     name: 'Artist',
-    image: 'kgt-about-artist.png',
+    image: 'kgt-about-artist.webp',
     className: 'about-collage__image--artist',
     depth: 0.72,
   },
   {
     name: 'Poet',
-    image: 'kgt-about-poet.png',
+    image: 'kgt-about-poet.webp',
     className: 'about-collage__image--poet',
     depth: -0.9,
   },
@@ -85,7 +102,7 @@ const talentCategories = [
     title: 'Music & Sufi Traditions',
     description: 'Discover the sounds of Kashmir.',
     includes: 'Chakri, Sufiana, folk singing and instrumental music.',
-    image: 'kgt-category-music.png',
+    image: 'kgt-category-music.webp',
     alt: 'Traditional Kashmiri musicians performing with folk instruments',
     className: 'talent-category--music',
     depth: 0.4,
@@ -95,7 +112,7 @@ const talentCategories = [
     title: 'Dance & Movement',
     description: 'Tradition expressed through movement.',
     includes: 'Rouf, Hafiza, folk dance and contemporary dance.',
-    image: 'kgt-category-dance.png',
+    image: 'kgt-category-dance.webp',
     alt: 'Kashmiri dancers performing together on stage',
     className: 'talent-category--dance',
     depth: -0.75,
@@ -105,7 +122,7 @@ const talentCategories = [
     title: 'Art & Craftsmanship',
     description: 'Creativity shaped by heritage.',
     includes: 'Papier-mâché, Pashmina artistry, wood carving, embroidery and painting.',
-    image: 'kgt-category-art.png',
+    image: 'kgt-category-art.webp',
     alt: 'Artisan hand-painting a traditional Kashmiri papier-mâché object',
     className: 'talent-category--art',
     depth: 0.9,
@@ -115,7 +132,7 @@ const talentCategories = [
     title: 'Poetry & Storytelling',
     description: 'Stories and voices of Kashmir.',
     includes: 'Kashmiri poetry, storytelling and spoken word.',
-    image: 'kgt-category-poetry.png',
+    image: 'kgt-category-poetry.webp',
     alt: 'Poet sharing spoken word on stage',
     className: 'talent-category--poetry',
     depth: -0.55,
@@ -125,7 +142,7 @@ const talentCategories = [
     title: 'Theatre & Performance',
     description: 'Bringing culture to life.',
     includes: 'Traditional theatre, acting, drama and cultural performances.',
-    image: 'kgt-category-theatre.png',
+    image: 'kgt-category-theatre.webp',
     alt: 'Traditional Kashmiri theatre performer in costume',
     className: 'talent-category--theatre',
     depth: 0.7,
@@ -135,7 +152,7 @@ const talentCategories = [
     title: 'Modern & Contemporary',
     description: 'A new generation of creativity.',
     includes: 'Contemporary music, fusion, dance and creative performances.',
-    image: 'kgt-category-contemporary.png',
+    image: 'kgt-category-contemporary.webp',
     alt: 'Contemporary musicians performing together under stage lights',
     className: 'talent-category--contemporary',
     depth: -0.95,
@@ -146,6 +163,7 @@ function AboutCollage() {
   const collageRef = useRef(null);
   const frameRef = useRef(null);
   const pointerRef = useRef({ x: 0, y: 0 });
+  const [activeImage, setActiveImage] = useState(null);
 
   useEffect(() => {
     return () => {
@@ -204,17 +222,38 @@ function AboutCollage() {
       onPointerLeave={handlePointerLeave}
       aria-label="Kashmir talent performers"
     >
-      {aboutPerformers.map(({ name, image, className, depth }) => (
-        <figure
-          className={`about-collage__image ${className}`}
-          key={name}
-          data-depth={depth}
-          style={{ '--image-depth': depth }}
-        >
-          <img src={`/images/${image}`} alt={`${name} performing`} />
-          <figcaption>{name}</figcaption>
-        </figure>
-      ))}
+      {aboutPerformers.map(({ name, image, className, depth }) => {
+        const isActive = activeImage === name;
+        const activate = () =>
+          setActiveImage((current) => (current === name ? null : name));
+
+        return (
+          <figure
+            className={`about-collage__image ${className}${isActive ? ' about-collage__image--active' : ''}`}
+            key={name}
+            data-depth={depth}
+            style={{ '--image-depth': depth }}
+            role="button"
+            tabIndex={0}
+            aria-label={`View ${name} performing`}
+            aria-pressed={isActive}
+            onClick={activate}
+            onKeyDown={(event) => handleImageKeyDown(event, activate)}
+          >
+            <img
+              {...responsiveImageProps(
+                image,
+                825,
+                '(max-width: 600px) 42vw, 330px',
+              )}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>{name}</figcaption>
+          </figure>
+        );
+      })}
     </div>
   );
 }
@@ -224,6 +263,7 @@ function TalentCategoriesSection() {
   const canvasRef = useRef(null);
   const frameRef = useRef(null);
   const pointerRef = useRef({ x: 0, y: 0 });
+  const [activeCategory, setActiveCategory] = useState(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -328,36 +368,54 @@ function TalentCategoriesSection() {
           onPointerMove={handlePointerMove}
           onPointerLeave={handlePointerLeave}
         >
-          {talentCategories.map((category) => (
-            <article
-              className={`talent-category ${category.className}`}
-              key={category.number}
-              tabIndex={0}
-              data-category-depth={category.depth}
-            >
-              <img
-                className="talent-category__image"
-                src={`/images/${category.image}`}
-                alt={category.alt}
-                loading="lazy"
-              />
-              <div className="talent-category__content">
-                <span className="talent-category__number">
-                  Category {category.number}
-                </span>
-                <h3 className="talent-category__name">{category.title}</h3>
-                <div className="talent-category__details">
-                  <p className="talent-category__summary">
-                    {category.description}
-                  </p>
-                  <p className="talent-category__includes">
-                    <span>Includes</span>
-                    {category.includes}
-                  </p>
+          {talentCategories.map((category) => {
+            const isActive = activeCategory === category.number;
+            const activate = () =>
+              setActiveCategory((current) =>
+                current === category.number ? null : category.number,
+              );
+
+            return (
+              <article
+                className={`talent-category ${category.className}${isActive ? ' talent-category--active' : ''}`}
+                key={category.number}
+                tabIndex={0}
+                role="button"
+                aria-label={`Highlight ${category.title}`}
+                aria-pressed={isActive}
+                data-category-depth={category.depth}
+                onClick={activate}
+                onKeyDown={(event) => handleImageKeyDown(event, activate)}
+              >
+                <img
+                  {...responsiveImageProps(
+                    category.image,
+                    825,
+                    '(max-width: 600px) 52vw, (max-width: 960px) 36vw, 520px',
+                  )}
+                  className="talent-category__image"
+                  alt={category.alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="talent-category__content">
+                  <span className="talent-category__number">
+                    Category {category.number}
+                  </span>
+                  <h3 className="talent-category__name">{category.title}</h3>
+                  <div className="talent-category__details">
+                    <p className="talent-category__summary">
+                      {category.description}
+                    </p>
+                    <p className="talent-category__includes">
+                      <span>Includes</span>
+                      {category.includes}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -435,9 +493,10 @@ function AuditionsEventsSection() {
           <aside className="auditions-events__announcement" aria-labelledby="upcoming-events-title">
             <img
               className="auditions-events__announcement-image"
-              src="/images/kgt-upcoming-events.png"
+              src="/images/kgt-upcoming-events.webp"
               alt="A warmly lit stage and audience awaiting an upcoming event"
               loading="lazy"
+              decoding="async"
             />
             <div className="auditions-events__announcement-content">
               <div className="auditions-events__announcement-meta">
@@ -567,7 +626,7 @@ function WhyKashmirGotTalentSection() {
 const eventHighlights = [
   {
     name: 'Music',
-    image: 'kgt-event-music.png',
+    image: 'kgt-event-music.webp',
     alt: 'A singer performing under warm stage lights',
     className: 'event-highlight--music',
     depth: 0.65,
@@ -575,21 +634,21 @@ const eventHighlights = [
   },
   {
     name: 'Dance',
-    image: 'kgt-event-dance.png',
+    image: 'kgt-event-dance.webp',
     alt: 'Kashmiri dancers performing together on stage',
     className: 'event-highlight--dance',
     depth: -0.75,
   },
   {
     name: 'Santoor',
-    image: 'kgt-event-santoor.png',
+    image: 'kgt-event-santoor.webp',
     alt: 'A musician performing on the santoor',
     className: 'event-highlight--santoor',
     depth: 0.9,
   },
   {
     name: 'Showcase',
-    image: 'kgt-event-showcase.png',
+    image: 'kgt-event-showcase.webp',
     alt: 'A broad view of performers on a warmly lit stage',
     className: 'event-highlight--showcase',
     depth: -0.5,
@@ -599,70 +658,72 @@ const eventHighlights = [
 const sponsorPartners = [
   {
     name: 'Prismatic Kashmir',
-    image: 'sponsor-01-transparent.png',
+    image: 'sponsor-01-transparent.webp',
   },
   {
     name: 'Indian Army',
-    image: 'sponsor-02-transparent.png',
+    image: 'sponsor-02-transparent.webp',
   },
   {
     name: 'Jammu and Kashmir Tourism',
-    image: 'sponsor-03-transparent.png',
+    image: 'sponsor-03-transparent.webp',
   },
   {
     name: 'Government Degree College Kupwara',
-    image: 'sponsor-04-transparent.png',
+    image: 'sponsor-04-transparent.webp',
   },
   {
     name: 'District Administration Kupwara',
-    image: 'sponsor-05-transparent.png',
+    image: 'sponsor-05-transparent.webp',
   },
   {
     name: 'Kupwara Police',
-    image: 'sponsor-06-transparent.png',
+    image: 'sponsor-06-transparent.webp',
   },
   {
     name: 'Mission Yuva',
-    image: 'sponsor-07-transparent.png',
+    image: 'sponsor-07-transparent.webp',
   },
   {
     name: 'Radio Kupwara 89.6 FM',
-    image: 'sponsor-08-transparent.png',
+    image: 'sponsor-08-transparent.webp',
   },
   {
     name: 'Taha Film International',
-    image: 'sponsor-09-transparent.png',
+    image: 'sponsor-09-transparent.webp',
   },
 ];
 
 const galleryPreviewImages = [
   {
     name: 'Music',
-    image: 'kgt-event-music.png',
+    image: 'kgt-event-music.webp',
     alt: 'Representative image of a singer performing under warm stage lights',
     className: 'gallery-preview__image--featured',
     depth: 0.55,
   },
   {
     name: 'Dance',
-    image: 'kgt-event-dance.png',
+    image: 'kgt-event-dance.webp',
     alt: 'Representative image of Kashmiri dancers performing together',
     className: 'gallery-preview__image--dance',
     depth: -0.75,
   },
   {
     name: 'Craft',
-    image: 'kgt-category-art.png',
+    image: 'kgt-category-art.webp',
     alt: 'Representative image of an artisan creating traditional Kashmiri papier-mâché art',
     className: 'gallery-preview__image--craft',
     depth: 0.85,
+    imageWidth: 825,
   },
   {
     name: 'Poetry',
-    image: 'kgt-category-poetry.png',
+    image: 'kgt-category-poetry.webp',
     alt: 'Representative image of a performer sharing poetry on stage',
     className: 'gallery-preview__image--poetry',
     depth: -0.5,
+    imageWidth: 825,
   },
 ];
 
@@ -793,20 +854,27 @@ function EventHighlightsSection() {
           onPointerLeave={handlePointerLeave}
           aria-label="Representative cultural performance photography"
         >
-          {eventHighlights.map(({ name, image, alt, className, depth, featured }) => (
-            <figure
-              className={`event-highlight ${className}${featured ? ' event-highlight--featured' : ''}`}
-              key={image}
-              data-event-depth={depth}
-            >
-              <img
-                src={`/images/${image}`}
-                alt={alt}
-                loading="lazy"
-              />
-              <figcaption>{name}</figcaption>
-            </figure>
-          ))}
+          {eventHighlights.map(
+            ({ name, image, alt, className, depth, featured }) => (
+              <figure
+                className={`event-highlight ${className}${featured ? ' event-highlight--featured' : ''}`}
+                key={image}
+                data-event-depth={depth}
+              >
+                <img
+                  {...responsiveImageProps(
+                    image,
+                    1024,
+                    '(max-width: 600px) 100vw, (max-width: 960px) 50vw, 33vw',
+                  )}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>{name}</figcaption>
+              </figure>
+            ),
+          )}
         </div>
         <p className="event-highlights__note">
           Representative cultural visuals.
@@ -847,6 +915,7 @@ function SponsorsPartnersSection() {
                   src={`/images/${image}`}
                   alt={name}
                   loading="lazy"
+                  decoding="async"
                 />
               </li>
             ))}
@@ -860,6 +929,8 @@ function SponsorsPartnersSection() {
                 <img
                   src={`/images/${image}`}
                   alt=""
+                  loading="lazy"
+                  decoding="async"
                 />
               </li>
             ))}
@@ -1089,14 +1160,23 @@ function GalleryPreviewSection() {
           aria-label="Representative cultural and performance photography"
         >
           {galleryPreviewImages.map(
-            ({ name, image, alt, className, depth }, index) => (
+            ({ name, image, alt, className, depth, imageWidth = 1024 }, index) => (
               <figure
                 className={`gallery-preview__image ${className}`}
                 key={image}
                 data-gallery-depth={depth}
                 style={{ '--gallery-reveal-delay': `${index * 110}ms` }}
               >
-                <img src={`/images/${image}`} alt={alt} loading="lazy" />
+                <img
+                  {...responsiveImageProps(
+                    image,
+                    imageWidth,
+                    '(max-width: 600px) 100vw, (max-width: 960px) 50vw, 48vw',
+                  )}
+                  alt={alt}
+                  loading="lazy"
+                  decoding="async"
+                />
                 <figcaption>{name}</figcaption>
               </figure>
             ),
@@ -1344,6 +1424,17 @@ function HomeContactCtaSection() {
 }
 
 export default function Home() {
+  useEffect(() => {
+    const heroPreload = document.createElement('link');
+    heroPreload.rel = 'preload';
+    heroPreload.as = 'image';
+    heroPreload.href = '/images/kgt-hero-stage.webp';
+    heroPreload.fetchPriority = 'high';
+    document.head.append(heroPreload);
+
+    return () => heroPreload.remove();
+  }, []);
+
   return (
     <main className="page--home">
       <section className="home-hero" aria-labelledby="home-hero-title">

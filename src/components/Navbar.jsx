@@ -49,8 +49,12 @@ export default function Navbar() {
         >
           <img
             className="site-brand__logo"
-            src="/images/kgt-logo.png"
+            src="/images/kgt-logo.webp"
             alt="Kashmir Got Talent"
+            width="400"
+            height="167"
+            fetchpriority="high"
+            decoding="async"
           />
         </NavLink>
         <button

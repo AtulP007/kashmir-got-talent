@@ -1,19 +1,32 @@
+import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import SiteLayout from './components/SiteLayout.jsx';
 import { pages } from './data/pages.js';
-import AboutUs from './pages/AboutUs.jsx';
-import AuditionsRegistration from './pages/AuditionsRegistration.jsx';
-import ContactUs from './pages/ContactUs.jsx';
-import EventsAuditions from './pages/EventsAuditions.jsx';
-import FAQs from './pages/FAQs.jsx';
-import Gallery from './pages/Gallery.jsx';
-import Home from './pages/Home.jsx';
-import JudgesMentors from './pages/JudgesMentors.jsx';
-import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
-import SponsorsPartners from './pages/SponsorsPartners.jsx';
-import TalentCategories from './pages/TalentCategories.jsx';
-import TermsConditions from './pages/TermsConditions.jsx';
-import WinnersAchievements from './pages/WinnersAchievements.jsx';
+const AboutUs = lazy(() => import('./pages/AboutUs.jsx'));
+const AuditionsRegistration = lazy(() => import('./pages/AuditionsRegistration.jsx'));
+const ContactUs = lazy(() => import('./pages/ContactUs.jsx'));
+const EventsAuditions = lazy(() => import('./pages/EventsAuditions.jsx'));
+const FAQs = lazy(() => import('./pages/FAQs.jsx'));
+const Gallery = lazy(() => import('./pages/Gallery.jsx'));
+const Home = lazy(() => import('./pages/Home.jsx'));
+const JudgesMentors = lazy(() => import('./pages/JudgesMentors.jsx'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy.jsx'));
+const SponsorsPartners = lazy(() => import('./pages/SponsorsPartners.jsx'));
+const TalentCategories = lazy(() => import('./pages/TalentCategories.jsx'));
+const TermsConditions = lazy(() => import('./pages/TermsConditions.jsx'));
+const WinnersAchievements = lazy(() => import('./pages/WinnersAchievements.jsx'));
+
+function renderPage(PageComponent) {
+  return (
+    <Suspense
+      fallback={
+        <div className="route-loading" role="status" aria-label="Loading page" />
+      }
+    >
+      <PageComponent />
+    </Suspense>
+  );
+}
 
 const pageComponents = {
   home: Home,
@@ -51,13 +64,13 @@ export default function App() {
             <Route
               key={id}
               path={path}
-              element={<PageComponent />}
+              element={renderPage(PageComponent)}
             />
           );
         })}
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/auditions-events" element={<EventsAuditions />} />
-        <Route path="/winners" element={<WinnersAchievements />} />
+        <Route path="/about-us" element={renderPage(AboutUs)} />
+        <Route path="/auditions-events" element={renderPage(EventsAuditions)} />
+        <Route path="/winners" element={renderPage(WinnersAchievements)} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
