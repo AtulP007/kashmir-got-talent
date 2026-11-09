@@ -370,10 +370,12 @@ function TalentCategoriesSection() {
         >
           {talentCategories.map((category) => {
             const isActive = activeCategory === category.number;
-            const activate = () =>
+            const activate = () => {
+              if (!window.matchMedia('(min-width: 37.5625rem)').matches) return;
               setActiveCategory((current) =>
                 current === category.number ? null : category.number,
               );
+            };
 
             return (
               <article

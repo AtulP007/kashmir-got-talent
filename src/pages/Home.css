@@ -891,9 +891,55 @@
   }
 
   .talent-categories__canvas {
-    height: 42rem;
-    margin-inline: calc(var(--site-gutter) * -0.5);
+    display: flex;
     width: calc(100% + var(--site-gutter));
+    height: auto;
+    align-items: stretch;
+    gap: var(--space-3);
+    margin-right: calc(var(--site-gutter) * -1);
+    padding-right: var(--site-gutter);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .talent-categories__canvas::-webkit-scrollbar {
+    display: none;
+  }
+
+  .talent-category {
+    position: relative;
+    inset: auto;
+    width: 82%;
+    height: auto;
+    min-width: 0;
+    flex: 0 0 82%;
+    aspect-ratio: 4 / 5;
+    border-radius: 0.5rem;
+    opacity: 1;
+    transform: none;
+    transition: none;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    will-change: auto;
+  }
+
+  .talent-category--active {
+    z-index: auto;
+    border-color: rgb(231 210 164 / 36%);
+    box-shadow: 0 1.25rem 3rem rgb(0 0 0 / 42%);
+  }
+
+  .talent-category--active .talent-category__image {
+    filter: saturate(0.92) brightness(0.88);
+    transform: scale(1.015);
+  }
+
+  .talent-category--active::after {
+    opacity: 1;
   }
 
   .talent-category__content {
@@ -922,48 +968,6 @@
     font-size: 0.62rem;
     line-height: 1.35;
   }
-
-  .talent-category--music {
-    top: 16%;
-    left: 24%;
-    width: 52%;
-    height: 50%;
-  }
-
-  .talent-category--dance {
-    top: 1%;
-    left: 0;
-    width: 47%;
-    height: 34%;
-  }
-
-  .talent-category--art {
-    top: 0;
-    right: 0;
-    width: 39%;
-    height: 30%;
-  }
-
-  .talent-category--poetry {
-    bottom: 0;
-    left: 0;
-    width: 49%;
-    height: 34%;
-  }
-
-  .talent-category--theatre {
-    top: 49%;
-    right: 0;
-    width: 48%;
-    height: 35%;
-  }
-
-  .talent-category--contemporary {
-    right: 13%;
-    bottom: 0;
-    width: 54%;
-    height: 29%;
-  }
 }
 
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
@@ -981,10 +985,12 @@
 }
 
 @media (hover: none), (pointer: coarse) {
-  .about-collage__image,
-  .talent-category {
-    touch-action: pan-y;
+  .about-collage__image {
     will-change: auto;
+  }
+
+  .talent-category {
+    touch-action: auto;
   }
 
   .talent-category__details {
@@ -1020,6 +1026,12 @@
 
   .home-hero .home-hero__actions > .home-hero__button {
     transition: none;
+  }
+}
+
+@media (max-width: 37.5rem) and (prefers-reduced-motion: reduce) {
+  .talent-category {
+    transform: none;
   }
 }
 
